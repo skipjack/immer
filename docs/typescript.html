@@ -113,7 +113,48 @@
 <span class="hljs-comment">// `newState.x` cannot be modified here</span>
 </code></pre>
 <p><em>Note: Since TypeScript support for recursive types is limited, and there is no co- contravariance, it might the easiest to not type your state as <code>readonly</code> (Immer will still protect against accidental mutations)</em></p>
+<h2><a class="anchor" aria-hidden="true" id="cast-utilities"></a><a href="#cast-utilities" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Cast utilities</h2>
+<p>The types inside and outside a <code>produce</code> can be conceptually the same, but from a practical perspective different. For example, the <code>State</code> in the examples above should be considered immutable outside <code>produce</code>, but mutable inside <code>produce</code>.</p>
+<p>Sometimes this leads to practical conflicts. Take the following example:</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">type</span> Todo = {readonly done: <span class="hljs-built_in">boolean</span>}
+
+<span class="hljs-keyword">type</span> State = {
+    readonly finishedTodos: readonly Todo[]
+    readonly unfinishedTodos: readonly Todo[]
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">markAllFinished</span>(<span class="hljs-params">state: State</span>) </span>{
+    produce(state, <span class="hljs-function"><span class="hljs-params">draft</span> =&gt;</span> {
+        draft.finishedTodos = state.unfinishedTodos
+    })
+}
+</code></pre>
+<p>This will generate the error:</p>
+<pre><code class="hljs">The <span class="hljs-built_in">type</span> <span class="hljs-string">'readonly Todo[]'</span> <span class="hljs-keyword">is</span> <span class="hljs-string">'readonly'</span> <span class="hljs-built_in">and</span> cannot <span class="hljs-keyword">be</span> assigned <span class="hljs-keyword">to</span> the mutable <span class="hljs-built_in">type</span> <span class="hljs-string">'{ done: boolean; }[]'</span>
+</code></pre>
+<p>The reason for this error is that we assing our read only, immutable array to our draft, which expects a mutable type, with methods like <code>.push</code> etc etc. As far as TS is concerned, those are not exposed from our original <code>State</code>. To hint TypeScript that we want to upcast the collection here to a mutable array for draft purposes, we can use the utility <code>asDraft</code>:</p>
+<p><code>draft.finishedTodos = castDraft(state.unfinishedTodos)</code> will make the error disappear.</p>
+<p>There is also the utility <code>castImmutable</code>, in case you ever need to achieve the opposite. Note that these utilities are for all practical purposes no-ops, they will just return their original value.</p>
+<p>Tip: You can combine <code>castImmutable</code> with <code>produce</code> to type the return type of <code>produce</code> as something immutable, even when the original state was mutable:</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">// a mutable data structure</span>
+<span class="hljs-keyword">const</span> baseState = {
+    todos: [{
+        done: <span class="hljs-literal">false</span>
+    }]
+}
+
+<span class="hljs-keyword">const</span> nextState = castImmutable(produce(baseState, _draft =&gt; {}))
+
+<span class="hljs-comment">// inferred type of nextState is now:</span>
+{
+    readonly todos: ReadonlyArray&lt;{
+        readonly done: <span class="hljs-built_in">boolean</span>
+    }&gt;
+})
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="compatibility"></a><a href="#compatibility" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Compatibility</h2>
+<p><strong>Note:</strong> Immer v5.3+ supports TypeScript v3.7+ only.</p>
 <p><strong>Note:</strong> Immer v1.9+ supports TypeScript v3.1+ only.</p>
 <p><strong>Note:</strong> Immer v3.0+ supports TypeScript v3.4+ only.</p>
 <p><strong>Note:</strong> Flow support might be removed in future versions and we recommend TypeScript</p>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/immer/docs/api"><span class="arrow-prev">← </span><span>API overview</span></a><a class="docs-next button" href="/immer/docs/return"><span>Returning new data from producers</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 Michel Weststrate</section></footer></div></body></html>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/immer/docs/api"><span class="arrow-prev">← </span><span>API overview</span></a><a class="docs-next button" href="/immer/docs/return"><span>Returning new data from producers</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#cast-utilities">Cast utilities</a></li><li><a href="#compatibility">Compatibility</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 Michel Weststrate</section></footer></div></body></html>
