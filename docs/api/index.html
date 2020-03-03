@@ -68,13 +68,18 @@
 <tr><th>Exported name</th><th>Description</th><th>Section</th></tr>
 </thead>
 <tbody>
+<tr><td><code>(default)</code></td><td>The core API of Immer, typically named <code>produce</code>: <code>import produce from &quot;immer&quot;</code></td><td><a href="/immer/docs/produce">Produce</a></td></tr>
 <tr><td><code>applyPatches</code></td><td>Given a base state or draft, and a set of patches, applies the patches</td><td><a href="/immer/docs/patches">Patches</a></td></tr>
 <tr><td><code>castDraft</code></td><td>Converts any immutable type to its mutable counterpart. This is just a cast and doesn't actually do anything.</td><td><a href="/immer/docs/typescript">TypeScript</a></td></tr>
 <tr><td><code>castImmutable</code></td><td>Converts any mutable type to its immutable counterpart. This is just a cast and doesn't actually do anything.</td><td><a href="/immer/docs/typescript">TypeScript</a></td></tr>
 <tr><td><code>createDraft</code></td><td>Given a base state, creates a mutable draft for which any modifications will be recorded</td><td><a href="/immer/docs/async">Async</a></td></tr>
 <tr><td><code>Draft&lt;T&gt;</code></td><td>Exposed TypeScript type to convert an immutable type to a mutable type</td><td><a href="/immer/docs/typescript">TypeScript</a></td></tr>
+<tr><td><code>enableAllPlugins()</code></td><td>Enables all plugins mentioned below</td><td><a href="installation#pick-your-immer-version">Installation</a></td></tr>
+<tr><td><code>enableES5()</code></td><td>Enables support for older JavaScript engines, such as Internet Explorer and React Native</td><td><a href="installation#pick-your-immer-version">Installation</a></td></tr>
+<tr><td><code>enableMapSet()</code></td><td>Enables support for <code>Map</code> and <code>Set</code> collections.</td><td><a href="installation#pick-your-immer-version">Installation</a></td></tr>
+<tr><td><code>enablePatches()</code></td><td>Enables support for JSON patches.</td><td><a href="installation#pick-your-immer-version">Installation</a></td></tr>
 <tr><td><code>finishDraft</code></td><td>Given an draft created using <code>createDraft</code>, seals the draft and produces and returns the next immutable state that captures all the changes</td><td><a href="/immer/docs/async">Async</a></td></tr>
-<tr><td><code>Immer</code></td><td>constructor that can be used to create a second &quot;immer&quot; instance (exposing all APIs listed in this instance), that doesn't share its settings with global instance. Can also be used to attach further hooks that are triggered during object finalization, such as <code>onAssign</code>, <code>onDelete</code> and <code>onCopy</code>.</td><td><a href="https://github.com/immerjs/immer/blob/cb1c6dd8a33073aaa0a4d881c94ec7ab1c1be7f6/src/immer.d.ts#L224-L233">See source</a></td></tr>
+<tr><td><code>Immer</code></td><td>constructor that can be used to create a second &quot;immer&quot; instance (exposing all APIs listed in this instance), that doesn't share its settings with global instance.</td></tr>
 <tr><td><code>immerable</code></td><td>Symbol that can be added to a constructor or prototype, to indicate that Immer should treat the class as something that can be safely drafted</td><td><a href="/immer/docs/complex-objects">Classes</a></td></tr>
 <tr><td><code>Immutable&lt;T&gt;</code></td><td>Exposed TypeScript type to convert mutable types to immutable types</td><td></td></tr>
 <tr><td><code>isDraft</code></td><td>Returns true if the given object is a draft object</td><td></td></tr>

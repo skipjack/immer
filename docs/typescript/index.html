@@ -91,7 +91,7 @@
 
 <span class="hljs-comment">// `newState.x` cannot be modified here</span>
 </code></pre>
-<p>This ensures that the only place you can modify your state is in your produce callbacks. It even works recursively and with <code>ReadonlyArray</code>s!</p>
+<p>This ensures that the only place you can modify your state is in your produce callbacks. It even works recursively and with <code>ReadonlyArray</code>!</p>
 <p>For curried reducers, the type is inferred from the first argument of recipe function, so make sure to type it. The <code>Draft</code> utility type can be used if the state argument type is immutable:</p>
 <pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> produce, {Draft} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
 
@@ -132,7 +132,7 @@
 <p>This will generate the error:</p>
 <pre><code class="hljs">The <span class="hljs-built_in">type</span> <span class="hljs-string">'readonly Todo[]'</span> <span class="hljs-keyword">is</span> <span class="hljs-string">'readonly'</span> <span class="hljs-built_in">and</span> cannot <span class="hljs-keyword">be</span> assigned <span class="hljs-keyword">to</span> the mutable <span class="hljs-built_in">type</span> <span class="hljs-string">'{ done: boolean; }[]'</span>
 </code></pre>
-<p>The reason for this error is that we assign our read only, immutable array to our draft, which expects a mutable type, with methods like <code>.push</code> etc etc. As far as TS is concerned, those are not exposed from our original <code>State</code>. To hint TypeScript that we want to upcast the collection here to a mutable array for draft purposes, we can use the utility <code>asDraft</code>:</p>
+<p>The reason for this error is that we assign our read only, immutable array to our draft, which expects a mutable type, with methods like <code>.push</code> etc etc. As far as TS is concerned, those are not exposed from our original <code>State</code>. To hint TypeScript that we want to upcast the collection here to a mutable array for draft purposes, we can use the utility <code>castDraft</code>:</p>
 <p><code>draft.finishedTodos = castDraft(state.unfinishedTodos)</code> will make the error disappear.</p>
 <p>There is also the utility <code>castImmutable</code>, in case you ever need to achieve the opposite. Note that these utilities are for all practical purposes no-ops, they will just return their original value.</p>
 <p>Tip: You can combine <code>castImmutable</code> with <code>produce</code> to type the return type of <code>produce</code> as something immutable, even when the original state was mutable:</p>

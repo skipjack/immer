@@ -63,6 +63,7 @@
               }
             });
         </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/immerjs/immer/edit/master/docs/complex-objects.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Working with Map, Set and classes</h1></header><article><div><span><div id="codefund"><!-- fallback content --></div>
+<p><em>⚠ Since version 6 support for <code>Map</code>s and <code>Set</code>s has to be enabled explicitly by calling <a href="installation#pick-your-immer-version"><code>enableMapSet()</code></a> once when starting your application.</em></p>
 <p>Plain objects, arrays, <code>Map</code>s and <code>Set</code>s are always drafted by Immer. An example of using Maps with immer:</p>
 <pre><code class="hljs css language-javascript">test(<span class="hljs-string">"Producers can update Maps"</span>, () =&gt; {
     <span class="hljs-keyword">const</span> usersById_v1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>()

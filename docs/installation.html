@@ -73,6 +73,56 @@
 <li>JSDelivr: <code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/immer/dist/immer.umd.js&quot;&gt;&lt;/script&gt;</code></li>
 </ul></li>
 </ul>
+<h2><a class="anchor" aria-hidden="true" id="pick-your-immer-version"></a><a href="#pick-your-immer-version" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Pick your Immer version</h2>
+<p><em>This section only applies to version 6 and later</em></p>
+<p>To make sure Immer is as small as possible, features that are not required by every project has been made opt-in, and have to be enabled explicitly. This ensures that when bundling your application for production, unused features don't take any space.</p>
+<p>The following features can be opt-in to:</p>
+<table>
+<thead>
+<tr><th>Feature</th><th>Description</th><th>Method to call</th></tr>
+</thead>
+<tbody>
+<tr><td>ES 5 support</td><td>If your application needs to be able to run on older JavaScript environments, such as Internet Explorer or React Native, enable this feature.</td><td><code>enableES5()</code></td></tr>
+<tr><td><a href="/immer/docs/complex-objects">ES2015 Map and Set support</a></td><td>To enable Immer to operate on the native <code>Map</code> and <code>Set</code> collections, enable this feature</td><td><code>enableMapSet()</code></td></tr>
+<tr><td><a href="/immer/docs/patches">JSON Patch support</a></td><td>Immer can keep track of all the changes you make to draft objects. This can be useful for communicating changes using JSON patches</td><td><code>enablePatches()</code></td></tr>
+<tr><td><strong>All of the above</strong></td><td>Unsure what features you need? We recommend to enable all of the features above by default on new projects. Premature optimization of a few KB might not be worth the initial trouble. Also, enabling or disabling features doesn't impact the performance of Immer itself</td><td><code>enableAllPlugins()</code></td></tr>
+</tbody>
+</table>
+<p>For example, if you want to use <code>produce</code> on a <code>Map</code>, you need to enable this feature once during the start of your application:</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">// In your application's entrypoint</span>
+<span class="hljs-keyword">import</span> {enableMapSet} <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+enableMapSet()
+
+<span class="hljs-comment">// ...later</span>
+<span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
+
+<span class="hljs-keyword">const</span> usersById_v1 = <span class="hljs-keyword">new</span> Map([
+    [<span class="hljs-string">"michel"</span>, {name: <span class="hljs-string">"Michel Weststrate"</span>, country: <span class="hljs-string">"NL"</span>}]
+])
+
+<span class="hljs-keyword">const</span> usersById_v2 = produce(usersById_v1, <span class="hljs-function"><span class="hljs-params">draft</span> =&gt;</span> {
+    draft.get(<span class="hljs-string">"michel"</span>).country = <span class="hljs-string">"UK"</span>
+})
+
+expect(usersById_v1.get(<span class="hljs-string">"michel"</span>).country).toBe(<span class="hljs-string">"NL"</span>)
+expect(usersById_v2.get(<span class="hljs-string">"michel"</span>).country).toBe(<span class="hljs-string">"UK"</span>)
+</code></pre>
+<p>Vanilla Immer kicks in at ~3KB gzipped. Every plugin that is enabled adds &lt; 1 KB to that. The breakdown is as follows:</p>
+<pre><code class="hljs">Import size report <span class="hljs-keyword">for</span> immer:
+┌───────────────────────┬───────────┬────────────┬───────────┐
+│        (index)        │ just <span class="hljs-keyword">this</span> │ cumulative │ increment │
+├───────────────────────┼───────────┼────────────┼───────────┤
+│ <span class="hljs-keyword">import</span> * <span class="hljs-keyword">from</span> <span class="hljs-string">'immer'</span> │   <span class="hljs-number">5606</span>    │     <span class="hljs-number">0</span>      │     <span class="hljs-number">0</span>     │
+│        produce        │   <span class="hljs-number">3085</span>    │    <span class="hljs-number">3085</span>    │     <span class="hljs-number">0</span>     │
+│       enableES5       │   <span class="hljs-number">3870</span>    │    <span class="hljs-number">3878</span>    │    <span class="hljs-number">793</span>    │
+│     enableMapSet      │   <span class="hljs-number">3893</span>    │    <span class="hljs-number">4654</span>    │    <span class="hljs-number">776</span>    │
+│     enablePatches     │   <span class="hljs-number">3826</span>    │    <span class="hljs-number">5387</span>    │    <span class="hljs-number">733</span>    │
+│   enableAllPlugins    │   <span class="hljs-number">5382</span>    │    <span class="hljs-number">5421</span>    │    <span class="hljs-number">34</span>     │
+└───────────────────────┴───────────┴────────────┴───────────┘
+(<span class="hljs-keyword">this</span> report was generated by npmjs.com/package/<span class="hljs-keyword">import</span>-size)
+</code></pre>
 <h2><a class="anchor" aria-hidden="true" id="immer-on-older-javascript-environments"></a><a href="#immer-on-older-javascript-environments" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Immer on older JavaScript environments?</h2>
 <p>By default <code>produce</code> tries to use proxies for optimal performance. However, on older JavaScript engines <code>Proxy</code> is not available. For example, when running Microsoft Internet Explorer or React Native (if &lt; v0.59 or when using the Hermes engine) on Android. In such cases, Immer will fallback to an ES5 compatible implementation which works identically, but is a bit slower.</p>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/immer/docs/introduction"><span class="arrow-prev">← </span><span>Introduction</span></a><a class="docs-next button" href="/immer/docs/produce"><span>Using produce</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#immer-on-older-javascript-environments">Immer on older JavaScript environments?</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 Michel Weststrate</section></footer></div></body></html>
+<p>Since version 6, support for the fallback implementation has to be explicitly enabled by calling <code>enableES5()</code></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/immer/docs/introduction"><span class="arrow-prev">← </span><span>Introduction</span></a><a class="docs-next button" href="/immer/docs/produce"><span>Using produce</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#pick-your-immer-version">Pick your Immer version</a></li><li><a href="#immer-on-older-javascript-environments">Immer on older JavaScript environments?</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 Michel Weststrate</section></footer></div></body></html>
