@@ -69,7 +69,7 @@
 <li>Unmodified objects will be structurally shared with the original objects.</li>
 <li>If no changes are made to a draft, generally it holds that <code>original(draft) === current(draft)</code>, but this is not guaranteed.</li>
 <li>Future changes to the draft won't be reflected in the object produced by <code>current</code> (except for references to undraftable objects)</li>
-<li>Unlinke <code>produce</code> objects created by <code>current</code> will <em>not</em> be frozen.</li>
+<li>Unlike <code>produce</code> objects created by <code>current</code> will <em>not</em> be frozen.</li>
 </ol>
 <p>Use <code>current</code> sparingly, it can be a potentially expensive operation, especially when using ES5.</p>
 <p>Note that <code>current</code> cannot be invoked on objects that aren't drafts.</p>
