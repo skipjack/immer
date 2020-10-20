@@ -88,7 +88,7 @@
 <tr><td><code>isDraft</code></td><td>Returns true if the given object is a draft object</td><td></td></tr>
 <tr><td><code>isDraftable</code></td><td>Returns true if Immer is capable of turning this object into a draft. Which is true for: arrays, objects without prototype, objects with <code>Object</code> as their prototype, objects that have the <code>immerable</code> symbol on their constructor or prototype</td><td></td></tr>
 <tr><td><code>nothing</code></td><td>Value that can be returned from a recipe, to indicate that the value <code>undefined</code> should be produced</td><td><a href="/immer/docs/return">Return</a></td></tr>
-<tr><td><code>original</code></td><td>Given a draft object (doesn't have to be a tree root), returns the the original object at the same path in the original state tree, if present</td><td><a href="/immer/docs/original">Original</a></td></tr>
+<tr><td><code>original</code></td><td>Given a draft object (doesn't have to be a tree root), returns the original object at the same path in the original state tree, if present</td><td><a href="/immer/docs/original">Original</a></td></tr>
 <tr><td><code>Patch</code></td><td>Exposed TypeScript type, describes the shape of an (inverse) patch object</td><td><a href="/immer/docs/patches">Patches</a></td></tr>
 <tr><td><code>produce</code></td><td>The core API of Immer, also exposed as the <code>default</code> export</td><td><a href="/immer/docs/produce">Produce</a></td></tr>
 <tr><td><code>produceWithPatches</code></td><td>Works the same as <code>produce</code>, but instead of just returning the produced object, it returns a tuple, consisting of <code>[result, patches, inversePatches]</code>.</td><td><a href="/immer/docs/patches">Patches</a></td></tr>
