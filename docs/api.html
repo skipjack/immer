@@ -82,6 +82,7 @@
 <tr><td><code>enableMapSet()</code></td><td>Enables support for <code>Map</code> and <code>Set</code> collections.</td><td><a href="installation#pick-your-immer-version">Installation</a></td></tr>
 <tr><td><code>enablePatches()</code></td><td>Enables support for JSON patches.</td><td><a href="installation#pick-your-immer-version">Installation</a></td></tr>
 <tr><td><code>finishDraft</code></td><td>Given an draft created using <code>createDraft</code>, seals the draft and produces and returns the next immutable state that captures all the changes</td><td><a href="/immer/docs/async">Async</a></td></tr>
+<tr><td><code>freeze(obj, deep?)</code></td><td>Freezes draftable objects. Returns the original object. By default freezes shallowly, but if the second argument is <code>true</code> it will freeze recursively.</td></tr>
 <tr><td><code>Immer</code></td><td>constructor that can be used to create a second &quot;immer&quot; instance (exposing all APIs listed in this instance), that doesn't share its settings with global instance.</td></tr>
 <tr><td><code>immerable</code></td><td>Symbol that can be added to a constructor or prototype, to indicate that Immer should treat the class as something that can be safely drafted</td><td><a href="/immer/docs/complex-objects">Classes</a></td></tr>
 <tr><td><code>Immutable&lt;T&gt;</code></td><td>Exposed TypeScript type to convert mutable types to immutable types</td><td></td></tr>
@@ -92,7 +93,7 @@
 <tr><td><code>Patch</code></td><td>Exposed TypeScript type, describes the shape of an (inverse) patch object</td><td><a href="/immer/docs/patches">Patches</a></td></tr>
 <tr><td><code>produce</code></td><td>The core API of Immer, also exposed as the <code>default</code> export</td><td><a href="/immer/docs/produce">Produce</a></td></tr>
 <tr><td><code>produceWithPatches</code></td><td>Works the same as <code>produce</code>, but instead of just returning the produced object, it returns a tuple, consisting of <code>[result, patches, inversePatches]</code>.</td><td><a href="/immer/docs/patches">Patches</a></td></tr>
-<tr><td><code>setAutoFreeze</code></td><td>Enables / disables automatic freezing of the trees produces. By default enabled in development builds</td><td><a href="/immer/docs/freezing">Freezing</a></td></tr>
+<tr><td><code>setAutoFreeze</code></td><td>Enables / disables automatic freezing of the trees produces. By default enabled.</td><td><a href="/immer/docs/freezing">Freezing</a></td></tr>
 <tr><td><code>setUseProxies</code></td><td>Can be used to disable or force the use of <code>Proxy</code> objects. Useful when filing bug reports.</td><td></td></tr>
 </tbody>
 </table>
