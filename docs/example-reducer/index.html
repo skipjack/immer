@@ -74,9 +74,10 @@
 <a style="font-style:italic;padding:5px;margin:5px;"  href="https://egghead.io/lessons/react-update-immutable-state-with-react-usereducer-through-immer">Hosted on egghead.io</a>
 </details></p>
 <p>Here is a simple example of the difference that Immer could make in practice.</p>
-<pre><code class="hljs css language-javascript"><span class="hljs-comment">// Redux reducer</span>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">// Reducer with inital state</span>
+<span class="hljs-keyword">const</span> INITAL_STATE = {};
 <span class="hljs-comment">// Shortened, based on: https://github.com/reactjs/redux/blob/master/examples/shopping-cart/src/reducers/products.js</span>
-<span class="hljs-keyword">const</span> byId = <span class="hljs-function">(<span class="hljs-params">state = {}, action</span>) =&gt;</span> {
+<span class="hljs-keyword">const</span> byId = <span class="hljs-function">(<span class="hljs-params">state = INITAL_STATE, action</span>) =&gt;</span> {
     <span class="hljs-keyword">switch</span> (action.type) {
         <span class="hljs-keyword">case</span> RECEIVE_PRODUCTS:
             <span class="hljs-keyword">return</span> {
@@ -94,6 +95,9 @@
 <p>After using Immer, our reducer can be expressed as:</p>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">"immer"</span>
 
+<span class="hljs-comment">// Reducer with inital state</span>
+<span class="hljs-keyword">const</span> INITAL_STATE = {};
+
 <span class="hljs-keyword">const</span> byId = produce(<span class="hljs-function">(<span class="hljs-params">draft, action</span>) =&gt;</span> {
     <span class="hljs-keyword">switch</span> (action.type) {
         <span class="hljs-keyword">case</span> RECEIVE_PRODUCTS:
@@ -101,9 +105,9 @@
                 draft[product.id] = product
             })
     }
-}, {})
+}, INITAL_STATE)
 </code></pre>
 <p>Notice that it is not necessary to handle the default case, a producer that doesn't do anything will return the original state.</p>
 <p>Creating Redux reducer is just a sample application of the Immer package. Immer is not just designed to simplify Redux reducers. It can be used in any context where you have an immutable data tree that you want to clone and modify (with structural sharing).</p>
 <p><em>Note: it might be tempting after using producers for a while, to just place <code>produce</code> in your root reducer and then pass the draft to each reducer and work directly over said draft. Don't do that. It removes the benefit of using Redux as a system where each reducer is testable as a pure function. Immer is best used when applied to small, individual pieces of logic.</em></p>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/immer/docs/curried-produce"><span class="arrow-prev">← </span><span>Curried producers</span></a><a class="docs-next button" href="/immer/docs/example-setstate"><span class="function-name-prevnext">React setState example</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 Michel Weststrate</section></footer></div></body></html>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/immer/docs/curried-produce"><span class="arrow-prev">← </span><span>Curried producers</span></a><a class="docs-next button" href="/immer/docs/example-setstate"><span class="function-name-prevnext">React setState example</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2021 Michel Weststrate</section></footer></div></body></html>
